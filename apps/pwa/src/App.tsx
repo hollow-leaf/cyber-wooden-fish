@@ -1,13 +1,34 @@
 import "./App.css";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getSerwist } from "virtual:serwist";
 
-import viteLogo from "/vite.svg";
-
-import reactLogo from "./assets/react.svg";
-
 function App() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [hasPermission, setHasPermission] = useState(false);
+  const [score, setScore] = useState(0);
+  const [isJumping, setIsJumping] = useState(false);
+
+  const getMotion = async () => {
+    if (!window.DeviceMotionEvent) {
+      alert("Your current device does not have access to the DeviceMotion event");
+      return;
+    } else {
+      setHasPermission(true);
+    }
+  };
+
+  const handleJump = useCallback((height: number) => {
+    setIsJumping(true);
+    setPosition(prev => ({ ...prev, y: -height }));
+    setScore(prev => prev + Math.floor(height / 50)); 
+
+    setTimeout(() => {
+      setPosition(prev => ({ ...prev, y: 0 }));
+      setIsJumping(false);
+    }, 3000);
+  }, []);
+
   useEffect(() => {
     const loadSerwist = async () => {
       if ("serviceWorker" in navigator) {
@@ -19,20 +40,53 @@ function App() {
       }
     };
     loadSerwist();
-  });
+  
+     // Motion event listener
+     if (hasPermission) {
+      const handleMotion = (e: DeviceMotionEvent) => {
+        if (e.acceleration && !isJumping) {
+          const acceleration = e.acceleration.y || 0;
+          if (acceleration > 15) { // set a threshold
+            const jumpHeight = Math.min(acceleration * 20, 300); // set a max jump height
+            handleJump(jumpHeight);
+          }
+        }
+      };
+
+      window.addEventListener("devicemotion", handleMotion);
+      return () => window.removeEventListener("devicemotion", handleMotion);
+    }
+  }, [hasPermission, isJumping, handleJump]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="game-container" style={{ height: '100vh', position: 'relative' }}>
+      {!hasPermission && (
+        <button onClick={getMotion}>Enable Motion Sensor</button>
+      )}
+
+      <div className="score-board" style={{
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '24px',
+        fontWeight: 'bold'
+      }}>
+        Score: {score}
       </div>
-      <h1>Vite + React + Serwist</h1>
-    </>
+
+      <div
+        style={{
+          width: '20px',
+          height: '50px',
+          backgroundColor: 'red',
+          position: 'absolute',
+          bottom: '50px',
+          left: '50%',
+          transform: `translateX(-50%) translateY(${position.y}px)`,
+          transition: 'transform 0.3s ease-out'
+        }}
+      />
+    </div>
   );
 }
 

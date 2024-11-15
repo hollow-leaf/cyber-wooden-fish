@@ -15,6 +15,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@serwist/vite": "latest",
     "@serwist/window": "^9.0.10",
     "@types/react": "18.3.12",
