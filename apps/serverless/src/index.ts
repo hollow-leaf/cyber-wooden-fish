@@ -1,9 +1,35 @@
-import { Hono } from 'hono'
+import { swaggerUI } from '@hono/swagger-ui'
+import { OpenAPIHono } from '@hono/zod-openapi'
+import { cors } from 'hono/cors'
+import { prettyJSON } from 'hono/pretty-json'
+import { admin } from './routes'
 
-const app = new Hono()
+function main() {
+  const openapi_documentation_route = '/openapi.json'
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+  const app = new OpenAPIHono().doc(openapi_documentation_route, {
+    openapi: '3.1.0',
+    info: {
+      version: '1.0.0',
+      title: 'worker',
+    },
+  })
 
-export default app
+  app.get('/docs', swaggerUI({ url: openapi_documentation_route }))
+  // cors
+  app.use('*', cors({
+    origin: '*',
+    allowHeaders: ['Content-Type', 'Authorization'],
+    allowMethods: ['POST', 'GET', 'OPTIONS'],
+    exposeHeaders: ['Content-Length'],
+    maxAge: 600,
+    credentials: true,
+  }))
+
+  app.use(prettyJSON())
+  app.route('/', admin)
+
+  return app
+}
+
+export default main()
