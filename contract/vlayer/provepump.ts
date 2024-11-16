@@ -1,6 +1,6 @@
 import { createVlayerClient } from "@vlayer/sdk";
-import proverSpec from "../out/WebProofProver.sol/WebProofProver";
-import verifierSpec from "../out/WebProofVerifier.sol/WebProofVerifier";
+import proverSpec from "../out/PumpProver.sol/PumpProver";
+import verifierSpec from "../out/PumpVerifer.sol/PumpVerifier";
 import tls_proof from "./tls_proof.json";
 import * as assert from "assert";
 import { encodePacked, isAddress, keccak256 } from "viem";
@@ -89,14 +89,7 @@ async function testSuccessProvingAndVerification() {
     args: [twitterUserAddress],
   });
 
-  const tokenOwnerAddress = await ethClient.readContract({
-    address: verifier,
-    abi: verifierSpec.abi,
-    functionName: "ownerOf",
-    args: [generateTokenId(twitterHandle)],
-  });
-
-  assert.strictEqual(twitterUserAddress, tokenOwnerAddress);
+  assert.notStrictEqual(balance, 0n);
 }
 
 async function testFailedProving() {
@@ -128,8 +121,4 @@ async function testFailedProving() {
     );
     console.log("Proving failed as expected with message:", error.message);
   }
-}
-
-function generateTokenId(username: string): bigint {
-  return BigInt(keccak256(encodePacked(["string"], [username])));
 }
