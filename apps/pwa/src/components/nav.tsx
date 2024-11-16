@@ -9,7 +9,7 @@ const NAV_ITEMS = {
 
 export default function Navbar() {
   return (
-    <div className="border-t-border fixed bottom-0 z-20 h-navbar w-full border-t-[1px] bg-black px-10 pt-2">
+    <div className="fixed bottom-0 z-20 h-navbar w-full bg-black px-10 pt-2">
       <div className="mx-auto flex w-full max-w-sm justify-between">
         {Object.entries(NAV_ITEMS).map(
           ([nav, { title, icon: IconComponent, path }]) => (
