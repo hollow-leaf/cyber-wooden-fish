@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useLocation,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppContextProvider } from "./contexts/AppContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PumpGame from "./routes/pump-game";

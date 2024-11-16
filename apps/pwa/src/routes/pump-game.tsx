@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 
 export default function PumpGame() {
+  const [timeLeft, setTimeLeft] = useState(10);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [isBounced, setIsBounced] = useState(false);
   const [zTilt, setZtilt] = useState(0);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
@@ -43,6 +43,7 @@ export default function PumpGame() {
     };
   }, [isRunning, position]);
 
+  // Update position
   useEffect(() => {
     let interval: any;
     if (isRunning) {
@@ -68,7 +69,23 @@ export default function PumpGame() {
     };
   }, [isRunning]);
 
+  // Timer
+  useEffect(() => {
+    let timer: any;
+    if (isRunning && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsRunning(false);
+      clearInterval(timer);
+    }
+
+    return () => clearInterval(timer);
+  }, [isRunning, timeLeft]);
+
   const startGame = () => {
+    setTimeLeft(10);
     setScore(0); // Reset score
     setPosition(0); // Reset ball position
     velocity.current = 0; // Reset velocity
@@ -91,6 +108,7 @@ export default function PumpGame() {
           <>
             <div className="ball" style={{ bottom: `${position}px` }}></div>
             <div className="score">Score: {score}</div>
+            <div className="absolute left-0 top-10">Time: {timeLeft} sec</div>
           </>
         ) : (
           <Button className="start-button" onClick={startGame}>

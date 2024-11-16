@@ -54,21 +54,21 @@ task("deploy:token", "Deploy contract")
   },
   )
 
-task("deploy:name", "Deploy contract")
+task("deploy:tf", "Deploy contract")
   .addFlag("verify", "Validate contract after deploy")
   .setAction(async ({ verify }, hre) => {
     await hre.run("compile")
     const [signer]: any = await hre.ethers.getSigners()
-    const contractFactory = await hre.ethers.getContractFactory("Reputation712")
+    const contractFactory = await hre.ethers.getContractFactory("contracts/TokenFactory.sol:TokenFactory")
     // if you mint in constructor, you need to add value in deploy function
     const deployContract: any = await contractFactory.connect(signer).deploy()
-    console.log(`Reputation.sol deployed to ${deployContract.address}`)
+    console.log(`TokenFactory.sol deployed to ${deployContract.address}`)
 
     const address = {
       main: deployContract.address,
     }
     const addressData = JSON.stringify(address)
-    writeFileSync(`scripts/address/${hre.network.name}/`, "Reputation712.json", addressData)
+    writeFileSync(`scripts/address/${hre.network.name}/`, "TokenFactory.json", addressData)
 
     await deployContract.deployed()
 
@@ -79,7 +79,7 @@ task("deploy:name", "Deploy contract")
         await hre.run("verify:verify", {
           address: deployContract.address,
           constructorArguments: [],
-          contract: "contracts/Reputation712.sol:Reputation712",
+          contract: "contracts/TokenFactory.sol:TokenFactory",
         })
       } catch (e) {
         console.log(e)

@@ -1,5 +1,4 @@
 import { createContext, PropsWithChildren, useContext, useEffect } from "react";
-import { toast } from "sonner";
 import { getSerwist } from "virtual:serwist";
 
 interface AppContext {}

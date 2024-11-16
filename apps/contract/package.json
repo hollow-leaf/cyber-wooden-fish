@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "hardhat compile",
     "deploy:token": "hardhat deploy:token",
-    "deploy:name": "hardhat deploy:name",
+    "deploy:tf": "hardhat deploy:tf",
     "verify": "hardhat verify"
   },
   "keywords": [],
