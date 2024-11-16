@@ -1,13 +1,13 @@
+import WoodenFishIcon from "@/assets/wooden-fish-icon";
 import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 
 export default function PumpGame() {
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [zTilt, setZtilt] = useState(0);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
   const gravity = 0.9;
@@ -18,7 +18,6 @@ export default function PumpGame() {
     if (isRunning) {
       motionListener = (event: DeviceMotionEvent) => {
         const zTilt = event.accelerationIncludingGravity?.z || 0; // Tilt along the Z-axis
-        setZtilt(zTilt);
         const currentTime = Date.now();
 
         if (
@@ -85,7 +84,7 @@ export default function PumpGame() {
   }, [isRunning, timeLeft]);
 
   const startGame = () => {
-    setTimeLeft(10);
+    setTimeLeft(60);
     setScore(0); // Reset score
     setPosition(0); // Reset ball position
     velocity.current = 0; // Reset velocity
@@ -94,28 +93,44 @@ export default function PumpGame() {
   };
 
   return (
-    <div className="h-full w-full pb-4">
-      <div className="absolute left-0 flex gap-4">
-        <div>{zTilt}</div>
-        <div>{position}</div>
-      </div>
-      <div className="absolute right-0 flex gap-4">
-        <div>{lastBounceTime.current}</div>
-        <div>{Date.now() - lastBounceTime.current}</div>
-      </div>
-      <div className="relative h-full w-full">
-        {isRunning ? (
-          <>
-            <div className="ball" style={{ bottom: `${position}px` }}></div>
-            <div className="score">Score: {score}</div>
-            <div className="absolute left-0 top-10">Time: {timeLeft} sec</div>
-          </>
-        ) : (
-          <Button className="start-button" onClick={startGame}>
-            Start Game
+    <div className="relative h-full w-full items-center justify-center">
+      {
+        //   <div className="absolute left-0 flex gap-4">
+        //     <div>{zTilt}</div>
+        //     <div>{position}</div>
+        //   </div>
+        //     <div className="absolute right-0 flex gap-4">
+        //       <div>{lastBounceTime.current}</div>
+        //         <div>{Date.now() - lastBounceTime.current}</div>
+        // </div>
+      }
+      {isRunning ? (
+        <>
+          <div className="ball" style={{ bottom: `${400 + position}px` }}></div>
+          <div className="score">Score: {score}</div>
+          <div className="absolute left-0 top-10">Time: {timeLeft} sec</div>
+          <div className="absolute bottom-10 left-1/2 h-60 w-60 -translate-x-1/2">
+            <WoodenFishIcon className="h-full w-full fill-white" />
+          </div>
+        </>
+      ) : (
+        <div className="justify-cente flex h-full w-full flex-col items-center">
+          <h1 className="organic-text mt-[30vh] text-[56px] text-white">
+            Pump
+          </h1>
+
+          <p className="mt-4 max-w-60 text-center text-subtitle text-sub-text">
+            Hit your wooden fish as much as possible to gain merit points
+            <br />
+          </p>
+          <Button className="mx-auto mt-4" onClick={startGame}>
+            Start
           </Button>
-        )}
-      </div>
+          <div className="absolute bottom-10 h-60 w-60">
+            <WoodenFishIcon className="h-full w-full fill-white" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

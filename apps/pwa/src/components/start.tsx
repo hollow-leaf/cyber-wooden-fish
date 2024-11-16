@@ -86,6 +86,7 @@ export default function Start() {
     (window.DeviceMotionEvent && !isSafari()) ||
     //@ts-ignore
     (isSafari() && window.DeviceMotionEvent?.requestPermission);
+
   return (
     <div className="relative h-lvh w-full max-w-[338px] overflow-hidden px-4 pb-10 text-center">
       <style>{styles}</style>
@@ -102,8 +103,8 @@ export default function Start() {
         </h1>
 
         <p className="mb-[20vh] max-w-80 text-subtitle text-sub-text">
-          You're about to embark on a journey to experience the power of p2p
-          social networks <br />
+          A playful crypto platform designed for real-world social FOMO, turning
+          memes into a movement
         </p>
 
         {
