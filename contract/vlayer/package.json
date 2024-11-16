@@ -10,9 +10,9 @@
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "prove:testnet": "VLAYER_ENV=testnet bun run prove.ts",
-    "prove:dev": "VLAYER_ENV=dev bun run prove.ts",
+    "prove:dev": "VLAYER_ENV=dev bun run provepump.ts",
     "deploy:testnet": "VLAYER_ENV=testnet bun run deploy.ts",
-    "deploy:dev": "VLAYER_ENV=dev bun run deploy.ts"
+    "deploy:dev": "VLAYER_ENV=dev bun run deployPump.ts"
   },
   "dependencies": {
     "@noble/hashes": "^1.4.0",

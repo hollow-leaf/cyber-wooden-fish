@@ -9,6 +9,7 @@
 </div>
 
 ### **ShowCase**
+vlayer prover: [0x8e42ab07232757cc0da117d2846ff981e3edcbdf](https://sepolia.scrollscan.com/address/0x8e42ab07232757cc0da117d2846ff981e3edcbdf)
 
 ## What's inside?
 
