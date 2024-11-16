@@ -2,6 +2,7 @@ import WoodenFishIcon from "@/assets/wooden-fish-icon";
 import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
+import DrumStick from "@/assets/drum-stick";
 
 export default function PumpGame() {
   const [timeLeft, setTimeLeft] = useState(60);
@@ -94,28 +95,24 @@ export default function PumpGame() {
 
   return (
     <div className="relative h-full w-full items-center justify-center">
-      {
-        //   <div className="absolute left-0 flex gap-4">
-        //     <div>{zTilt}</div>
-        //     <div>{position}</div>
-        //   </div>
-        //     <div className="absolute right-0 flex gap-4">
-        //       <div>{lastBounceTime.current}</div>
-        //         <div>{Date.now() - lastBounceTime.current}</div>
-        // </div>
-      }
       {isRunning ? (
         <>
-          <div className="ball" style={{ bottom: `${400 + position}px` }}></div>
-          <div className="score">Score: {score}</div>
-          <div className="absolute left-0 top-10">Time: {timeLeft} sec</div>
-          <div className="absolute bottom-10 left-1/2 h-60 w-60 -translate-x-1/2">
+          <div className="score text-4xl">Metric Points: {score}</div>
+          <div className="absolute left-1/2 top-40 flex -translate-x-1/2 text-center text-3xl">
+            Time Left <br />
+            {timeLeft} s
+          </div>
+          <div className="absolute bottom-10 left-1/2 z-0 h-40 w-40 -translate-x-1/2">
+            <DrumStick
+              style={{ rotate: `${position - 30}deg` }}
+              className="absolute -bottom-[110px] -right-[360px] z-10 h-96 w-96 fill-white"
+            />
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
         </>
       ) : (
         <div className="justify-cente flex h-full w-full flex-col items-center">
-          <h1 className="organic-text mt-[30vh] text-[56px] text-white">
+          <h1 className="organic-text mt-[20vh] text-[56px] text-white">
             Pump
           </h1>
 
@@ -126,7 +123,7 @@ export default function PumpGame() {
           <Button className="mx-auto mt-4" onClick={startGame}>
             Start
           </Button>
-          <div className="absolute bottom-10 h-60 w-60">
+          <div className="absolute bottom-10 h-40 w-40">
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
         </div>
