@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { isSafari } from "@/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -67,18 +68,24 @@ export default function Start() {
 
   const handleOnClick = async () => {
     if (!isRequested) {
-      //@ts-ignore
-      const permission = await window.DeviceMotionEvent.requestPermission();
-      if (permission !== "granted") {
-        toast("You must grant access to the device's sensor for this demo");
-        return;
+      if (isSafari()) {
+        //@ts-ignore
+        const permission = await window.DeviceMotionEvent.requestPermission();
+        if (permission !== "granted") {
+          toast("You must grant access to the device's sensor for this demo");
+          return;
+        }
       }
-
       setIsRequired(true);
     } else {
       navigate("/game/pump");
     }
   };
+
+  const isDeviceAvailable =
+    (window.DeviceMotionEvent && !isSafari()) ||
+    //@ts-ignore
+    (isSafari() && window.DeviceMotionEvent?.requestPermission);
   return (
     <div className="relative h-lvh w-full max-w-[338px] overflow-hidden px-4 pb-10 text-center">
       <style>{styles}</style>
@@ -101,7 +108,7 @@ export default function Start() {
 
         {
           //@ts-ignore
-          window.DeviceMotionEvent?.requestPermission ? (
+          isDeviceAvailable ? (
             <Button
               onClick={handleOnClick}
               variant="default"
