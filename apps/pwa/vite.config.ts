@@ -1,7 +1,9 @@
 import { serwist } from "@serwist/vite";
 import react from "@vitejs/plugin-react-swc";
-import basicSsl from '@vitejs/plugin-basic-ssl'
-import { defineConfig } from "vite";
+import basicSsl from "@vitejs/plugin-basic-ssl";
+import { defineConfig, AliasOptions } from "vite";
+import path from "path";
+const root = path.resolve(__dirname, "src");
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,11 +18,16 @@ export default defineConfig({
     }),
     basicSsl({
       /** name of certification */
-      name: 'test',
+      name: "test",
       /** custom trust domains */
-      domains: ['*.custom.com'],
+      domains: ["*.custom.com"],
       /** custom certification directory */
-      certDir: '/Users/kidneyweakx/.devServer/cert'
-    })
+      certDir: "/Users/kidneyweakx/.devServer/cert",
+    }),
   ],
+  resolve: {
+    alias: {
+      "@": root,
+    } as AliasOptions,
+  },
 });
