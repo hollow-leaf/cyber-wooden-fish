@@ -18,12 +18,14 @@ export default function PumpGame() {
       setHasPermission(true);
     }
 
-    if (!window.DeviceMotionEvent.requestPermission && isSafari()) {
+    //@ts-ignore
+    if (!window.DeviceMotionEvent?.requestPermission && isSafari()) {
       alert(
         "Your current device does not have access to the DeviceMotion event",
       );
     }
 
+    //@ts-ignore
     let permission = await window.DeviceMotionEvent.requestPermission();
     if (permission !== "granted") {
       return alert(
