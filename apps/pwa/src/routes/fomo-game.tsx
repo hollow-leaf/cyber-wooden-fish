@@ -3,12 +3,14 @@ import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import DrumStick from "@/assets/drum-stick";
+import { MintMemeButton } from "@/components/MintMemeButton";
 
 export default function FomoGame() {
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(5);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [isShowMint, setIsShowMint] = useState(false);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
   const gravity = 0.9;
@@ -79,13 +81,14 @@ export default function FomoGame() {
     } else if (timeLeft === 0) {
       setIsRunning(false);
       clearInterval(timer);
+      setIsShowMint(true);
     }
 
     return () => clearInterval(timer);
   }, [isRunning, timeLeft]);
 
   const startGame = () => {
-    setTimeLeft(60);
+    setTimeLeft(5);
     setScore(0); // Reset score
     setPosition(0); // Reset ball position
     velocity.current = 0; // Reset velocity
@@ -95,7 +98,19 @@ export default function FomoGame() {
 
   return (
     <div className="relative h-full w-full items-center justify-center">
-      {isRunning ? (
+      {isShowMint ? (
+        <div className="justify-cente flex h-full w-full flex-col items-center">
+          <MintMemeButton
+            className="absolute left-1/2 top-40 mx-auto w-fit -translate-x-1/2 bg-black px-8 text-center text-lg font-bold"
+            amount={10 ** 9}
+            receiver="0xabcd"
+            tokenAddr="0xabc"
+          />
+          <div className="absolute bottom-10 h-40 w-40">
+            <WoodenFishIcon className="h-full w-full fill-white" />
+          </div>
+        </div>
+      ) : isRunning ? (
         <>
           <div className="score text-4xl">Metric Points: {score}</div>
           <div className="absolute left-1/2 top-40 flex -translate-x-1/2 text-center text-3xl">
