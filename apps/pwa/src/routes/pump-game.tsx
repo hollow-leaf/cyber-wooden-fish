@@ -1,38 +1,12 @@
+import { useMotion } from "@/hooks/useMotion";
 import { useEffect, useState, useCallback } from "react";
 import { getSerwist } from "virtual:serwist";
-import { isSafari } from "../utils";
 
 export default function PumpGame() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [hasPermission, setHasPermission] = useState(false);
   const [score, setScore] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
-
-  const getMotion = async () => {
-    if (!window.DeviceMotionEvent) {
-      alert(
-        "Your current device does not have access to the DeviceMotion event",
-      );
-      return;
-    } else {
-      setHasPermission(true);
-    }
-
-    //@ts-ignore
-    if (!window.DeviceMotionEvent?.requestPermission && isSafari()) {
-      alert(
-        "Your current device does not have access to the DeviceMotion event",
-      );
-    }
-
-    //@ts-ignore
-    let permission = await window.DeviceMotionEvent.requestPermission();
-    if (permission !== "granted") {
-      return alert(
-        "You must grant access to the device's sensor for this demo",
-      );
-    }
-  };
+  const motion = useMotion();
 
   const handleJump = useCallback((height: number) => {
     setIsJumping(true);
@@ -58,41 +32,46 @@ export default function PumpGame() {
     loadSerwist();
 
     // Motion event listener
-    if (hasPermission) {
-      const handleMotion = (e: DeviceMotionEvent) => {
-        if (e.acceleration && !isJumping) {
-          const acceleration = e.acceleration.y || 0;
-          if (acceleration > 15) {
-            // set a threshold
-            const jumpHeight = Math.min(acceleration * 20, 300); // set a max jump height
-            handleJump(jumpHeight);
-          }
-        }
-      };
+    const handleMotion = (e: DeviceMotionEvent) => {
+      if (e.acceleration && !isJumping) {
+        const acceleration = e.acceleration.y || 0;
+        setPosition((prev) => ({ ...prev, y: acceleration }));
+        // if (acceleration > 15) {
+        //   // set a threshold
+        //   const jumpHeight = Math.min(acceleration * 20, 300); // set a max jump height
+        //   setPosition((prev) => ({ ...prev, y: jumpHeight }));
+        //   // handleJump(jumpHeight);
+        // }
+      }
 
       window.addEventListener("devicemotion", handleMotion);
       return () => window.removeEventListener("devicemotion", handleMotion);
-    }
-  }, [hasPermission, isJumping, handleJump]);
+    };
+  }, [isJumping, handleJump]);
 
   return (
-    <div className="game-container relative h-full w-full">
-      {!hasPermission && (
-        <button onClick={getMotion}>Enable Motion Sensor</button>
-      )}
-
-      <div
-        className="score-board"
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          fontSize: "24px",
-          fontWeight: "bold",
-        }}
-      >
-        Score: {score}
-      </div>
+    <div className="relative h-full w-full">
+      <div>Score: {score}</div>
+      <div>{position.y}</div>
+      {
+        //     <div>
+        //       Acceleration:{" "}
+        //       {motion &&
+        //         Object.values(motion.acceleration).map((d) => <div>{d}</div>)}
+        //     </div>
+        //       <div>
+        //       AccelerationIncludingGravity:{" "}
+        //   {motion &&
+        //     Object.values(motion.accelerationIncludingGravity).map((d) => (
+        //       <div>{d}</div>
+        //     ))}
+        // </div>
+        //   <div>
+        //   rotationRate:{" "}
+        //     {motion &&
+        //   Object.values(motion.rotationRate).map((d) => <div>{d}</div>)}
+        //   </div>
+      }
 
       <div
         style={{

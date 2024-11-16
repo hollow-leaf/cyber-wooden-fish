@@ -62,7 +62,7 @@ h1 {
 
 @layer base {
   :root {
-    --navbar-height: 86px;
+    --navbar-height: 82px;
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
