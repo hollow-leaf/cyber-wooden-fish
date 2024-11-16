@@ -9,23 +9,23 @@ const NAV_ITEMS = {
 
 export default function Navbar() {
   return (
-    <div className="fixed h-navbar bottom-0 w-full bg-black border-t-[1px] border-t-border px-10 pt-2 z-20">
-      <div className="w-full max-w-sm flex justify-between mx-auto">
+    <div className="border-t-border fixed bottom-0 z-20 h-navbar w-full border-t-[1px] bg-black px-10 pt-2">
+      <div className="mx-auto flex w-full max-w-sm justify-between">
         {Object.entries(NAV_ITEMS).map(
           ([nav, { title, icon: IconComponent, path }]) => (
             <Link
               key={nav}
               to={path}
               className={cn(
-                "w-12 h-11 max-w-12 max-h-11 text-sub-text flex flex-col gap-1 items-center hover:cursor-pointer group",
+                "text-sub-text group flex h-11 max-h-11 w-12 max-w-12 flex-col items-center gap-1 hover:cursor-pointer",
               )}
             >
               <IconComponent
                 className={cn(
-                  "stroke-sub-text group-hover:stroke-white size-5",
+                  "stroke-sub-text size-5 group-hover:stroke-white",
                 )}
               />
-              <div className="text-[11px] group-hover:text-white whitespace-nowrap">
+              <div className="whitespace-nowrap text-[11px] group-hover:text-white">
                 {title}
               </div>
             </Link>

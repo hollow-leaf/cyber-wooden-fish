@@ -21,7 +21,7 @@ const router = createBrowserRouter([
 ]);
 export default function App() {
   return (
-    <main className="h-screen w-screen items-center overflow-hidden relative flex flex-col mx-auto text-white font-space-grotesk">
+    <main className="font-space-grotesk relative mx-auto flex h-screen w-screen flex-col items-center overflow-hidden text-white">
       <RouterProvider router={router} />
     </main>
   );

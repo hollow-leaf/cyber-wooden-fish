@@ -74,10 +74,7 @@ export default function PumpGame() {
   }, [hasPermission, isJumping, handleJump]);
 
   return (
-    <div
-      className="game-container"
-      style={{ height: "100vh", position: "relative" }}
-    >
+    <div className="game-container relative h-full w-full">
       {!hasPermission && (
         <button onClick={getMotion}>Enable Motion Sensor</button>
       )}
