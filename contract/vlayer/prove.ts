@@ -11,6 +11,7 @@ import {
 
 import proverSpec from "../out/SimpleProver.sol/SimpleProver";
 import verifierSpec from "../out/SimpleVerifier.sol/SimpleVerifier";
+import { sleep } from "bun";
 
 const config = getConfig();
 const {
@@ -74,7 +75,7 @@ if (!isAddress(owner)) {
 }
 
 console.log("Proof result:", result);
-
+sleep(100);
 const verificationHash = await ethClient.writeContract({
   address: verifier,
   abi: verifierSpec.abi,
@@ -83,11 +84,11 @@ const verificationHash = await ethClient.writeContract({
   account: john,
 });
 
-const receipt = await ethClient.waitForTransactionReceipt({
-  hash: verificationHash,
-  confirmations,
-  retryCount: 60,
-  retryDelay: 1000,
-});
+// const receipt = await ethClient.waitForTransactionReceipt({
+//   hash: verificationHash,
+//   confirmations,
+//   retryCount: 60,
+//   retryDelay: 1000,
+// });
 
 console.log(`Verification result: ${receipt.status}`);

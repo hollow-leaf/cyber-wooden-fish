@@ -22,7 +22,7 @@ contract SimpleVerifier is Verifier {
         public
         onlyVerified(prover, SimpleProver.balance.selector)
     {
-        require(!claimed[claimer], "Already claimed");
+        // require(!claimed[claimer], "Already claimed");
 
         if (balance > 10_000_000) {
             claimed[claimer] = true;
