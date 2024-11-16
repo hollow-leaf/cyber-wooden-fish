@@ -15,7 +15,7 @@ const ResponseErrorSchema = z.object({
 
 const route = createRoute({
   method: 'get',
-  path: '/add_admin',
+  path: '/add_point',
   // security: [{ Bearer: [] }],
   request: { query: QuerySchema },
   responses: {
@@ -45,14 +45,14 @@ const route = createRoute({
   },
 })
 
-export const add_admin = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
+export const add_point = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
   const username = context.req.query('user')
   console.log(username)
   if (!username) {
     return context.json({ error: 'Invalid username!' } as const, 500)
   }
 
-  const admins = await context.env.cykv.get('admins', 'text')
+  const member = await context.env.cykv.get('admins', 'text')
   await context.env.cykv.put('admins', `${username}\n${admins ?? ''}`)
 
   return context.json({ message: `Successfully added ${username} to the list of admins!` }, 200)
