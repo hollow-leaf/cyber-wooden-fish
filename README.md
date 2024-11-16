@@ -1,14 +1,14 @@
-# Turborepo starter
+<div align="center">
+<h1>Cyber Wooden Fish</h1>
 
-This is an official starter Turborepo.
+<p></p>
 
-## Using this example
+<img src="./logo.png" width="50%" height="50%"></img>
 
-Run the following command:
+[![](https://img.shields.io/github/license/hollow-leaf/cyber-wooden-fish)](./LICENSE)
+</div>
 
-```sh
-npx create-turbo@latest
-```
+### **ShowCase**
 
 ## What's inside?
 
