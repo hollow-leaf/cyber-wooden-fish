@@ -52,8 +52,8 @@ export const add_member = new OpenAPIHono<HonoContext>().openapi(route, async (c
     return context.json({ error: 'Invalid username!' } as const, 500)
   }
 
-  const members = await context.env.db.get('members', 'text')
-  await context.env.db.put('members', `${username}\n${members ?? ''}`)
+  const members = await context.env.cykv.get('members', 'text')
+  await context.env.cykv.put('members', `${username}\n${members ?? ''}`)
 
   return context.json({ message: `Successfully added ${username} to the list of members!` }, 200)
 })

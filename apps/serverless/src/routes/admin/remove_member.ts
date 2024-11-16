@@ -37,13 +37,13 @@ const route = createRoute({
 
 export const remove_member = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
   const username = context.req.query('user') ?? ''
-  const members = await context.env.db.get('members', 'text')
+  const members = await context.env.cykv.get('members', 'text')
   const new_members = members
     ?.split('\n')
     .filter((member) => member !== username)
     .join('\n')
 
-  await context.env.db.put('members', new_members ?? '')
+  await context.env.cykv.put('members', new_members ?? '')
 
   return context.json({ message: `${username} has been removed from the list of members!` })
 })

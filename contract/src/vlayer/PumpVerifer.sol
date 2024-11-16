@@ -7,12 +7,11 @@ import {Proof} from "vlayer-0.1.0/Proof.sol";
 import {Verifier} from "vlayer-0.1.0/Verifier.sol";
 
 import {ERC20} from "@openzeppelin-contracts-5.0.1/token/ERC20/ERC20.sol";
-import {ERC721} from "@openzeppelin-contracts-5.0.1/token/ERC721/ERC721.sol";
 
-contract WebProofVerifier is Verifier, ERC721 {
+contract PumpVerifier is Verifier, ERC20 {
     address public prover;
 
-    constructor(address _prover) ERC721("TwitterNFT", "TNFT") {
+    constructor(address _prover) ERC20("Pump Token", "PUMPTK") {
         prover = _prover;
     }
 
@@ -23,6 +22,7 @@ contract WebProofVerifier is Verifier, ERC721 {
         uint256 point = uint256(keccak256(abi.encodePacked(userpoint)));
         require(point >= 1000, "user's point not enough");
 
-        _safeMint(account, 1000);
+
+        _mint(account, 100 * 10**decimals());
     }
 }

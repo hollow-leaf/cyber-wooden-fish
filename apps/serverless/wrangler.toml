@@ -7,9 +7,9 @@ compatibility_flags = [ "nodejs_compat" ]
 # [vars]
 # MY_VAR = "my-variable"
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[[kv_namespaces]]
+binding = "cykv"
+id = "4f154893d7814088ab9b76765c8df5a7"
 
 # [[r2_buckets]]
 # binding = "MY_BUCKET"

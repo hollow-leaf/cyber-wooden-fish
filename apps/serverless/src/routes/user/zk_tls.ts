@@ -6,7 +6,7 @@ const QuerySchema = z.object({
 })
 
 const ResponseSchema = z.object({
-  message: z.string(),
+  point: z.string(),
 })
 
 const ResponseErrorSchema = z.object({
@@ -45,14 +45,5 @@ const route = createRoute({
 })
 
 export const zk_tls = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
-  const username = context.req.query('user')
-  console.log(username)
-  if (!username) {
-    return context.json({ error: 'Invalid username!' } as const, 500)
-  }
-
-  const admins = await context.env.db.get('admins', 'text')
-  await context.env.db.put('admins', `${username}\n${admins ?? ''}`)
-
-  return context.json({ message: `Successfully added ${username} to the list of admins!` }, 200)
+  return context.json({ point: "10000" }, 200)
 })
