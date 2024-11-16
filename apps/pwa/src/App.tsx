@@ -2,6 +2,30 @@ import "./App.css";
 
 import { useEffect, useState, useCallback } from "react";
 import { getSerwist } from "virtual:serwist";
+import {
+  DynamicContextProvider,
+  DynamicWidget,
+} from "@dynamic-labs/sdk-react-core";
+import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
+import {
+  createConfig,
+  WagmiProvider,
+} from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { http } from 'viem';
+import { mainnet } from 'viem/chains';
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+
+const config = createConfig({
+  chains: [mainnet],
+  multiInjectedProviderDiscovery: false,
+  transports: {
+    [mainnet.id]: http(),
+  },
+});
+  
+const queryClient = new QueryClient();
+const dynamicKey =  import.meta.env.VITE_DYNAMICAPIKEY
 
 function App() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -59,34 +83,50 @@ function App() {
   }, [hasPermission, isJumping, handleJump]);
 
   return (
-    <div className="game-container" style={{ height: '100vh', position: 'relative' }}>
-      {!hasPermission && (
-        <button onClick={getMotion}>Enable Motion Sensor</button>
-      )}
+    <DynamicContextProvider
+    settings={{
+      // Find your environment id at https://app.dynamic.xyz/dashboard/developer
+      environmentId: dynamicKey,
+      
+      walletConnectors: [EthereumWalletConnectors],
+    }}
+    >
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <DynamicWagmiConnector>
+            <DynamicWidget />
+            <div className="game-container" style={{ height: '100vh', position: 'relative' }}>
+              {!hasPermission && (
+                <button onClick={getMotion}>Enable Motion Sensor</button>
+              )}
 
-      <div className="score-board" style={{
-        position: 'absolute',
-        top: '20px',
-        right: '20px',
-        fontSize: '24px',
-        fontWeight: 'bold'
-      }}>
-        Score: {score}
-      </div>
+              <div className="score-board" style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                fontSize: '24px',
+                fontWeight: 'bold'
+              }}>
+                Score: {score}
+              </div>
 
-      <div
-        style={{
-          width: '20px',
-          height: '50px',
-          backgroundColor: 'red',
-          position: 'absolute',
-          bottom: '50px',
-          left: '50%',
-          transform: `translateX(-50%) translateY(${position.y}px)`,
-          transition: 'transform 0.3s ease-out'
-        }}
-      />
-    </div>
+              <div
+                style={{
+                  width: '20px',
+                  height: '50px',
+                  backgroundColor: 'red',
+                  position: 'absolute',
+                  bottom: '50px',
+                  left: '50%',
+                  transform: `translateX(-50%) translateY(${position.y}px)`,
+                  transition: 'transform 0.3s ease-out'
+                }}
+              />
+            </div>
+          </DynamicWagmiConnector>
+        </QueryClientProvider>
+      </WagmiProvider> 
+    </DynamicContextProvider>
   );
 }
 
