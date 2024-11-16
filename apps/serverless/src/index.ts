@@ -2,7 +2,7 @@ import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { cors } from 'hono/cors'
 import { prettyJSON } from 'hono/pretty-json'
-import { admin } from './routes'
+import { admin, user } from './routes'
 
 function main() {
   const openapi_documentation_route = '/openapi.json'
@@ -27,7 +27,10 @@ function main() {
   }))
 
   app.use(prettyJSON())
-  app.route('/', admin)
+  app
+    .route('/', admin)
+    .route('/', user)
+
 
   return app
 }

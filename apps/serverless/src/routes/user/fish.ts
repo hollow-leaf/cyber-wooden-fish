@@ -15,7 +15,7 @@ const ResponseErrorSchema = z.object({
 
 const route = createRoute({
   method: 'get',
-  path: '/add_admin',
+  path: '/fish',
   // security: [{ Bearer: [] }],
   request: { query: QuerySchema },
   responses: {
@@ -45,7 +45,7 @@ const route = createRoute({
   },
 })
 
-export const add_admin = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
+export const fish = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
   const username = context.req.query('user')
   console.log(username)
   if (!username) {

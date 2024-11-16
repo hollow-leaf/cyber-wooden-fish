@@ -6,7 +6,7 @@ const QuerySchema = z.object({
 })
 
 const ResponseSchema = z.object({
-  message: z.string(),
+  point: z.string(),
 })
 
 const ResponseErrorSchema = z.object({
@@ -15,8 +15,7 @@ const ResponseErrorSchema = z.object({
 
 const route = createRoute({
   method: 'get',
-  path: '/add_admin',
-  // security: [{ Bearer: [] }],
+  path: '/zk_tls',
   request: { query: QuerySchema },
   responses: {
     200: {
@@ -45,15 +44,6 @@ const route = createRoute({
   },
 })
 
-export const add_admin = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
-  const username = context.req.query('user')
-  console.log(username)
-  if (!username) {
-    return context.json({ error: 'Invalid username!' } as const, 500)
-  }
-
-  const admins = await context.env.cykv.get('admins', 'text')
-  await context.env.cykv.put('admins', `${username}\n${admins ?? ''}`)
-
-  return context.json({ message: `Successfully added ${username} to the list of admins!` }, 200)
+export const zk_tls = new OpenAPIHono<HonoContext>().openapi(route, async (context) => {
+  return context.json({ point: "10000" }, 200)
 })
