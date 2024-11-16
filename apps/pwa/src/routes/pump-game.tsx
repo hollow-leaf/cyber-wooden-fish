@@ -6,7 +6,6 @@ export default function PumpGame() {
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [isBounced, setIsBounced] = useState(false);
   const [zTilt, setZtilt] = useState(0);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
