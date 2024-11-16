@@ -1,90 +1,103 @@
-import { useMotion } from "@/hooks/useMotion";
-import { useEffect, useState, useCallback } from "react";
-import { getSerwist } from "virtual:serwist";
+import "./pump-game.css";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState, useRef } from "react";
 
 export default function PumpGame() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
-  const [isJumping, setIsJumping] = useState(false);
-  const motion = useMotion();
-
-  const handleJump = useCallback((height: number) => {
-    setIsJumping(true);
-    setPosition((prev) => ({ ...prev, y: -height }));
-    setScore((prev) => prev + Math.floor(height / 50));
-
-    setTimeout(() => {
-      setPosition((prev) => ({ ...prev, y: 0 }));
-      setIsJumping(false);
-    }, 3000);
-  }, []);
+  const [position, setPosition] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBounced, setIsBounced] = useState(false);
+  const [zTilt, setZtilt] = useState(0);
+  const velocity = useRef(0);
+  const lastBounceTime = useRef(0);
+  const gravity = 0.9;
+  const bounceVelocity = 15; // Upward velocity during bounce
 
   useEffect(() => {
-    const loadSerwist = async () => {
-      if ("serviceWorker" in navigator) {
-        const serwist = await getSerwist();
-        serwist?.addEventListener("installed", () => {
-          console.log("Serwist installed!");
+    let motionListener: any;
+    if (isRunning) {
+      motionListener = (event: DeviceMotionEvent) => {
+        const zTilt = event.accelerationIncludingGravity?.z || 0; // Tilt along the Z-axis
+        setZtilt(zTilt);
+        const currentTime = Date.now();
+
+        if (
+          zTilt > 9.5 &&
+          position === 0 &&
+          currentTime - lastBounceTime.current >= 100
+        ) {
+          // Trigger bounce
+          velocity.current = bounceVelocity;
+          lastBounceTime.current = currentTime;
+          setScore((prev) => prev + 1);
+        }
+      };
+
+      // Listen to device motion events
+      window.addEventListener("devicemotion", motionListener);
+    }
+
+    return () => {
+      if (motionListener)
+        window.removeEventListener("devicemotion", motionListener);
+    };
+  }, [isRunning, position]);
+
+  useEffect(() => {
+    let interval: any;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setPosition((prevPosition) => {
+          let newVelocity = velocity.current - gravity;
+          let newPosition = prevPosition + newVelocity;
+
+          if (newPosition <= 0) {
+            newPosition = 0;
+            velocity.current = 0;
+          } else {
+            velocity.current = newVelocity;
+          }
+
+          return newPosition;
         });
-        void serwist?.register();
-      }
-    };
-    loadSerwist();
+      }, 16); // Approximately 60fps
+    }
 
-    // Motion event listener
-    const handleMotion = (e: DeviceMotionEvent) => {
-      if (e.acceleration && !isJumping) {
-        const acceleration = e.acceleration.y || 0;
-        setPosition((prev) => ({ ...prev, y: acceleration }));
-        // if (acceleration > 15) {
-        //   // set a threshold
-        //   const jumpHeight = Math.min(acceleration * 20, 300); // set a max jump height
-        //   setPosition((prev) => ({ ...prev, y: jumpHeight }));
-        //   // handleJump(jumpHeight);
-        // }
-      }
-
-      window.addEventListener("devicemotion", handleMotion);
-      return () => window.removeEventListener("devicemotion", handleMotion);
+    return () => {
+      if (interval) clearInterval(interval);
     };
-  }, [isJumping, handleJump]);
+  }, [isRunning]);
+
+  const startGame = () => {
+    setScore(0); // Reset score
+    setPosition(0); // Reset ball position
+    velocity.current = 0; // Reset velocity
+    lastBounceTime.current = 0; // Reset last bounce time
+    setIsRunning(true); // Start the game
+  };
 
   return (
-    <div className="relative h-full w-full">
-      <div>Score: {score}</div>
-      <div>{position.y}</div>
-      {
-        //     <div>
-        //       Acceleration:{" "}
-        //       {motion &&
-        //         Object.values(motion.acceleration).map((d) => <div>{d}</div>)}
-        //     </div>
-        //       <div>
-        //       AccelerationIncludingGravity:{" "}
-        //   {motion &&
-        //     Object.values(motion.accelerationIncludingGravity).map((d) => (
-        //       <div>{d}</div>
-        //     ))}
-        // </div>
-        //   <div>
-        //   rotationRate:{" "}
-        //     {motion &&
-        //   Object.values(motion.rotationRate).map((d) => <div>{d}</div>)}
-        //   </div>
-      }
-
-      <div
-        style={{
-          width: "20px",
-          height: "50px",
-          backgroundColor: "red",
-          position: "absolute",
-          bottom: "50px",
-          left: "50%",
-          transform: `translateX(-50%) translateY(${position.y}px)`,
-          transition: "transform 0.3s ease-out",
-        }}
-      />
+    <div className="h-full w-full pb-4">
+      <div className="absolute left-0 flex gap-4">
+        <div>{zTilt}</div>
+        <div>{position}</div>
+      </div>
+      <div className="absolute right-0 flex gap-4">
+        <div>{lastBounceTime.current}</div>
+        <div>{Date.now() - lastBounceTime.current}</div>
+      </div>
+      <div className="relative h-full w-full">
+        {isRunning ? (
+          <>
+            <div className="ball" style={{ bottom: `${position}px` }}></div>
+            <div className="score">Score: {score}</div>
+          </>
+        ) : (
+          <Button className="start-button" onClick={startGame}>
+            Start Game
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
