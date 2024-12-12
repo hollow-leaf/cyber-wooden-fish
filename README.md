@@ -18,7 +18,7 @@ This project is designed to gamify meme coins, turning them into a dynamic cultu
 ### **ShowCase**
 vlayer prover: [0x8e42ab07232757cc0da117d2846ff981e3edcbdf](https://sepolia.scrollscan.com/address/0x8e42ab07232757cc0da117d2846ff981e3edcbdf)
 - Scroll Sepolia: [0x062b414E562ca0983c55D4731640e2E664cB96e2](https://sepolia.scrollscan.com/address/0x062b414E562ca0983c55D4731640e2E664cB96e2#code)
-- Flow: [0x8E42aB07232757CC0DA117d2846ff981E3eDCbdF](https://evm-testnet.flowscan.io/address/0x8E42aB07232757CC0DA117d2846ff981E3eDCbdF#code)
+- Avax Fuji: [0x71Fc3BE4B619Fd7c279C037eA0Ee09C475175d11](https://testnet.snowtrace.io/address/0x71Fc3BE4B619Fd7c279C037eA0Ee09C475175d11/contract/43113/code)
 
 ## What's inside?
 

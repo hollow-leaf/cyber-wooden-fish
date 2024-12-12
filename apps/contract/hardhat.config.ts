@@ -23,6 +23,7 @@ const chainIds = {
   lineaSepolia: 59141,
   scrollSepolia: 534351,
   neroTestnet: 6660001,
+  avaxFuji: 43113,
 }
 
 // Ensure that we have all the environment variables we need.
@@ -54,6 +55,9 @@ function getChainConfig (chain: keyof typeof chainIds): NetworkUserConfig {
     case 'flowTestnet':
       jsonRpcUrl = "https://testnet.evm.nodes.onflow.org"
       break
+    case 'avaxFuji':
+      jsonRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc"
+      break
     default:
       jsonRpcUrl = `https://${chain}.infura.io/v3/${infuraApiKey}`
   }
@@ -80,6 +84,7 @@ const config: HardhatUserConfig = {
     scrollSepolia: getChainConfig("scrollSepolia"),
     flowTestnet: getChainConfig("flowTestnet"),
     neroTestnet: getChainConfig("neroTestnet"),
+    avaxFuji: getChainConfig("avaxFuji"),
   },
   paths: {
     artifacts: "./artifacts",
@@ -122,9 +127,18 @@ const config: HardhatUserConfig = {
       opAvail: "NO_API_KEY",
       lineaSepolia: process.env.LINEASCAN_API_KEY || "",
       scrollSepolia: process.env.SCROLLSCAN_API_KEY || "",
+      avaxFuji: "NO_API_KEY",
       neroTestnet: "NO_API_KEY",
     },
     customChains: [
+      {
+        network: "avaxFuji",
+        chainId: 43113,
+        urls: {
+          apiURL: "https://api.avascan.info/v2/network/testnet/evm/43113/etherscan",
+          browserURL: "https://avascan.info/"
+        },
+      },
       {
         network: "lineaSepolia",
         chainId: 59141,
